@@ -1,13 +1,16 @@
 using OpenTelemetry.Trace;
 using Template.Domain;
-using Template.Domain.Items;
 using Template.Core;
 using Template.Core.Items;
 using Microsoft.AspNetCore.Mvc;
+using Template.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddTemplateServices()
+    .AddPersistenceServices();
 
 builder.Services.AddOpenTelemetry()
     .WithTracing(builder => builder

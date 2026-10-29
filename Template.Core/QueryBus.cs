@@ -15,13 +15,14 @@ public interface ICommandBus
     Task<Result<TResult>> Send<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TResult>;
 }
 
-public class QueryBus(IServiceProvider serviceProvider)
+public class QueryBus(IServiceProvider serviceProvider) : IQueryBus
 {
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
     public async Task<Result<TResult>> Send<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default) where TQuery : IQuery<TResult>
     {
         using var span = Observability.ActivitySource.StartActivity($"{nameof(QueryBus)}.{nameof(Send)}");
         span?.SetTag("query.type", typeof(TQuery).FullName);
-        var handler = serviceProvider.GetService<IQueryHandler<TQuery, TResult>>();
+        var handler = _serviceProvider.GetService<IQueryHandler<TQuery, TResult>>();
         if (handler == null)
         {
             span?.SetStatus(System.Diagnostics.ActivityStatusCode.Error, $"No handler registered for query type {typeof(TQuery).FullName}");
@@ -33,7 +34,7 @@ public class QueryBus(IServiceProvider serviceProvider)
     }
 }
 
-public class CommandBus(IServiceProvider serviceProvider)
+public class CommandBus(IServiceProvider serviceProvider) : ICommandBus
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
