@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Ryan Freels",
+    "classifications": [
+        "Common",
+        "API"
+    ],
+    "identity": "DomainTemplate.ApiProject",
+    "name": "A Domain Template for an API Project",
+    "shortName": "domainsolution",
+    "sourceName": "Template",
+    "tags": {
+        "language": "C#",
+        "type": "solution"
+    }
+}
